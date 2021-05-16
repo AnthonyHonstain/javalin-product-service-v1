@@ -1,7 +1,6 @@
 package com.mycompany.product
 
 import io.javalin.Javalin
-import io.javalin.Javalin.log
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.ApiBuilder.post
 
@@ -13,9 +12,6 @@ import io.micrometer.core.instrument.util.HierarchicalNameMapper
 import io.micrometer.graphite.GraphiteConfig
 import io.micrometer.graphite.GraphiteMeterRegistry
 import java.time.Duration
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 
 class JavalinApp {
@@ -40,7 +36,8 @@ class JavalinApp {
         //config.enableDevLogging()
         //config.requestLogger { ctx, ms -> log.error("${ctx.url()} time:$ms")}
     } .routes {
-        get("/users", UserController::getAll)
+        get("/products", ProductController::getAll)
+        post("products", ProductController::create)
     }
 
     fun start(port: Int) {

@@ -3,21 +3,21 @@ package com.mycompany.product
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 
-object UserController {
+object ProductController {
 
-    var users = mutableListOf("User1", "User2", "User3")
+    var products = mutableListOf("User1", "User2", "User3")
 
     fun create(ctx: Context) {
-        val username = ctx.queryParam("username")
-        if (username == null || username.length < 5) {
+        val productname = ctx.queryParam("productname")
+        if (productname == null || productname.length < 5) {
             throw BadRequestResponse()
         } else {
-            users.add(username)
+            products.add(productname)
             ctx.status(201)
         }
     }
 
     fun getAll(ctx: Context) {
-        ctx.json(users)
+        ctx.json(products)
     }
 }
