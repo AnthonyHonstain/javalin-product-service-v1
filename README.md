@@ -16,6 +16,16 @@ the way I like).
     * https://github.com/tipsy/javalin-testing-example
 * I referenced this blog post pretty extensively https://phauer.com/2018/best-practices-unit-testing-kotlin/
 
+* Mockito-kotlin - switch to this from MockK, I really struggled with the documentation on MockK and couldn't seem
+to effectively debug the issues I was having trying to mock Javalin stuff.
+    * https://github.com/mockito/mockito-kotlin
+    
+* Valiktor - library for validating inputs to my rest endpoints, I tried to use the built in stuff from the Javalin
+docs but I couldn't test it (on POST bodies) and I didn't see a clear path to more customization of the
+error messages.
+    * https://github.com/valiktor/valiktor
+    * https://blog.jdriven.com/2019/10/customising-form-validation-in-javalin-using-valiktor/
+
 ### Monitoring
 * Micrometer https://javalin.io/plugins/micrometer
     * https://micrometer.io/docs
