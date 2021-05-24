@@ -11,14 +11,27 @@ import org.junit.jupiter.api.Test
 class JavalinAppIntegrationTest {
 
     private val app = JavalinApp()
-    private val usersJson = JavalinJson.toJson(ProductController.products)
 
     @Test
-    fun `GET to fetch users returns list of users`() {
+    fun `GET ALL to fetch all products`() {
         app.start(1234)
-        val response: HttpResponse<String> = Unirest.get("http://localhost:1234/products").asString()
+        val response: HttpResponse<String> = Unirest.get("http://localhost:1234/product").asString()
+
         assertThat(response.status).isEqualTo(200)
-        assertThat(response.body).isEqualTo(usersJson)
+        val productListJson = JavalinJson.toJson(ProductController.products.values.toList())
+        assertThat(response.body).isEqualTo(productListJson)
+        app.stop()
+    }
+
+    @Test
+    fun `GET specific product`() {
+        app.start(1234)
+        val productId = 1L
+        val response: HttpResponse<String> = Unirest.get("http://localhost:1234/product/$productId").asString()
+
+        assertThat(response.status).isEqualTo(200)
+        val productJson = JavalinJson.toJson(ProductController.products.getOrElse(productId, { assert(false) }))
+        assertThat(response.body).isEqualTo(productJson)
         app.stop()
     }
 }

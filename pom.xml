@@ -21,6 +21,7 @@
     <micrometer.version>1.6.6</micrometer.version>
     <kotlin.version>1.4.32</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+    <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
   </properties>
 
   <dependencyManagement>
@@ -63,6 +64,12 @@
       <artifactId>javalin</artifactId>
       <version>3.13.6</version>
     </dependency>
+    <!-- This is apparently needed to deserialize JSON body in POST -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-kotlin</artifactId>
+      <version>2.10.3</version>
+    </dependency>
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-core</artifactId>
@@ -86,6 +93,17 @@
       <version>1.7.30</version>
     </dependency>
 
+    <!--
+    I gave up on the built in BodyValidator logic, I just couldn't get it to work with
+    the pattern of testing they recommended.
+    https://github.com/valiktor/valiktor
+    -->
+    <dependency>
+      <groupId>org.valiktor</groupId>
+      <artifactId>valiktor-core</artifactId>
+      <version>0.12.0</version>
+    </dependency>
+
     <!--> https://github.com/junit-team/junit5-samples/blob/r5.7.2/junit5-jupiter-starter-maven/pom.xml <-->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -95,12 +113,19 @@
     <!-->
     Testing https://javalin.io/tutorials/testing
     https://mockk.io/
-    <-->
-    <dependency>
+
+        <dependency>
       <groupId>io.mockk</groupId>
       <artifactId>mockk</artifactId>
-      <version>1.9.3</version>
+      <version>1.11.0</version>
       <scope>test</scope>
+    </dependency>
+    <-->
+    <!-- https://mvnrepository.com/artifact/org.mockito.kotlin/mockito-kotlin -->
+    <dependency>
+      <groupId>org.mockito.kotlin</groupId>
+      <artifactId>mockito-kotlin</artifactId>
+      <version>3.2.0</version>
     </dependency>
 
     <!-->

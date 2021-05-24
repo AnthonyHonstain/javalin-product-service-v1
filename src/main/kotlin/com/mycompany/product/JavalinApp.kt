@@ -1,8 +1,10 @@
 package com.mycompany.product
 
 import io.javalin.Javalin
+import io.javalin.Javalin.log
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.ApiBuilder.post
+import io.javalin.apibuilder.ApiBuilder.put
 
 import io.javalin.plugin.metrics.MicrometerPlugin
 import io.micrometer.core.instrument.Clock
@@ -34,10 +36,12 @@ class JavalinApp {
     val app = Javalin.create { config ->
         config.registerPlugin(MicrometerPlugin(graphiteRegistry))
         //config.enableDevLogging()
-        //config.requestLogger { ctx, ms -> log.error("${ctx.url()} time:$ms")}
+        config.requestLogger { ctx, ms -> log.error("${ctx.status()} ${ctx.url()} time:$ms")}
     } .routes {
-        get("/products", ProductController::getAll)
-        post("products", ProductController::create)
+        post("/product", ProductController::create)
+        get("/product", ProductController::getAll)
+        get("/product/:id", ProductController::get)
+        put("/product/:id", ProductController::put)
     }
 
     fun start(port: Int) {
