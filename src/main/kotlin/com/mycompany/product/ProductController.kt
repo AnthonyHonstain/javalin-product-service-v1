@@ -4,6 +4,7 @@ import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 import io.javalin.plugin.json.JavalinJson
 import org.valiktor.ConstraintViolationException
+import org.valiktor.functions.isEqualTo
 import org.valiktor.functions.isNotEmpty
 import org.valiktor.i18n.mapToMessage
 import org.valiktor.validate
@@ -29,9 +30,6 @@ object ProductController {
                     .toMap()
             throw BadRequestResponse(JavalinJson.toJson(msg))
         }
-        //val newProduct = ctx.bodyValidator<Product>()
-        //        .check({ it.sku.isNotEmpty() })
-        //        .get()
 
         products[newProduct.productId] = newProduct
         ctx.status(201)
@@ -40,17 +38,25 @@ object ProductController {
 
     fun put(ctx: Context) {
         val productId = ctx.pathParam("id").toLong()
-        val updatedProduct = ctx.bodyValidator<Product>()
-                .check({ it.productId == productId })
-                .check({ it.sku.isNotEmpty() })
-                .get()
+        val updatedProduct: Product = ctx.body<Product>()
+
+        try {
+            validate(updatedProduct) {
+                validate(Product::productId).isEqualTo(productId)
+                validate(Product::sku).isNotEmpty()
+            }
+        } catch (ex: ConstraintViolationException) {
+            val msg = ex.constraintViolations.mapToMessage(baseName = "messages", locale = Locale.ENGLISH)
+                    .map { it.property to it.message}
+                    .toMap()
+            throw BadRequestResponse(JavalinJson.toJson(msg))
+        }
 
         products.getOrElse(updatedProduct.productId, {
             throw BadRequestResponse()
         })
 
         products[updatedProduct.productId] = updatedProduct
-        ctx.status(201)
         ctx.json(updatedProduct)
     }
 
